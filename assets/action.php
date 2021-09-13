@@ -86,6 +86,8 @@ if (isset($_POST['login'])) {
                     $_SESSION['result']['front_squad'] = $db->getRow("SELECT * FROM front_squad WHERE email = ?s", $_SESSION['user']['email']);
                     $_SESSION['result']['jerk'] = $db->getRow("SELECT * FROM jerk WHERE email = ?s", $_SESSION['user']['email']);
                     $_SESSION['result']['push'] = $db->getRow("SELECT * FROM push WHERE email = ?s", $_SESSION['user']['email']);
+
+                    $_SESSION['user']['admin'] = $db->getOne("SELECT is_admin FROM athletes WHERE email = ?s", $_POST['email']);
                 } else {
                     echo 'Неправильный Email или пароль';
                 }

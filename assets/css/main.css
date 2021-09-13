@@ -74,6 +74,9 @@ body {
 .result__str {
     display: flex;
 }
+.result__str:not(:last-child) {
+    border-bottom: 1px solid #000;
+}
 .result__str>div {
     flex: 0 0 20%;
 }
@@ -95,7 +98,7 @@ body {
     font-size: 24px;
 }
 .result__str>div:not(:last-child) {
-    border-right: 1px solid #fff;
+    border-right: 1px solid #000;
 }
 .str__value {
     text-align: center;
@@ -103,5 +106,8 @@ body {
 }
 .result__str-head {
     text-align: center;
+    line-height: 50px;
+}
+.str__name {
     line-height: 50px;
 }
