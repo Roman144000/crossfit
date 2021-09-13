@@ -16,35 +16,21 @@ let formChange = document.querySelector('#change-value form');
 
 formChange.addEventListener('submit', function (e) {
     e.preventDefault();
-    let data = new FormData(this);
-    fetch('assets/doing.php', {
+    fetch('assets/action.php', {
         method: 'POST',
-        body: data,
-        headers: {"content-type": "application/x-www-form-urlencoded"}
+        body: new FormData(formChange),
     }).then( (response) => {
         if (response.status !== 200) {
             return Promise.reject();
         }
         return response.text();
-    }).then( i => console.log(i)).catch(() => console.log('error'));
-});
-
-
-
-
-
-$(document).on('submit', '#change-value form', function() {
-    let that =  $(this);
-    let data = that.serialize();
-    $.ajax({
-        url: 'assets/action.php',
-        data: data,
-        type: 'post',
-        success: function(html){
-            that.get(0).reset();
+    }).then( 
+        answer => {
+            formChange.reset();
             $.fancybox.close();
-            current_cell.innerHTML = html;
+            current_cell.innerHTML = answer;
         }
-    });
-    return false;
+    ).catch(
+        () => console.log('error')
+    );
 });
