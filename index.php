@@ -40,6 +40,10 @@
         </label>
 
         <label>
+            <input class="input" type="password" name="password2" placeholder="Пароль еще раз*">
+        </label>
+
+        <label>
             <input class="input" type="text" name="name" placeholder="Ваше имя*">
         </label>
 

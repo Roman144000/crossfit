@@ -8,65 +8,86 @@ include_once('db.php');
 
 if (isset($_POST['register'])) {
 
-    if (!empty($_POST['password']) && !empty($_POST['name']) && !empty($_POST['email'])) {
+    if (!empty($_POST['password']) && !empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password2'])) {
 
-        if (strlen($_POST['password'])<=20 && strlen($_POST['name'])<=20 && strlen($_POST['email'])<=30) {
+        if ($_POST['password'] === $_POST['password2']) {
 
-            $already_register = $db->getRow("SELECT * FROM athletes WHERE email = ?s", $_POST['email']);
+            if (strlen($_POST['password'])<=20 && strlen($_POST['password2'])<=20 && strlen($_POST['name'])<=20 && strlen($_POST['email'])<=30) {
 
-            if ($already_register === NULL) {
+                $already_register = $db->getRow("SELECT * FROM athletes WHERE email = ?s", $_POST['email']);
 
-                $password = $_POST['password'];
-                $name = $_POST['name'];
-                $email = $_POST['email'];
+                if ($already_register === NULL) {
 
-                function generateSalt() {
-                    $salt = '';
-                    $length = rand(5,10);
-                    for($i=0; $i<$length; $i++) {
-                        $salt .= chr(rand(33,126));
+                    $password = $_POST['password'];
+                    $name = $_POST['name'];
+                    $email = $_POST['email'];
+
+                    function generateSalt() {
+                        $salt = '';
+                        $length = rand(5,10);
+                        for($i=0; $i<$length; $i++) {
+                            $salt .= chr(rand(33,126));
+                        }
+                        return $salt;
                     }
-                    return $salt;
+
+                    $salt = generateSalt();
+
+                    $password = md5(md5($password) . $salt);
+
+                    $query = $db->query(
+                        "INSERT INTO athletes SET password=?s, name=?s, email=?s, salt=?s",
+                        $password,
+                        $name,
+                        $email,
+                        $salt
+                    );
+
+                    $time = $db->getOne("SELECT time FROM athletes WHERE email = ?s", $email);
+
+                    $hash = md5($name . $time);
+
+                    $query = $db->query(
+                        "INSERT INTO athletes_hash SET email=?s, hash=?s",
+                        $email,
+                        $hash
+                    );
+
+                    $headers  = "MIME-Version: 1.0\r\n";
+                    $headers .= "Content-type: text/html; charset=utf-8\r\n";
+                    $headers .= "To: <$email>\r\n";
+                    $headers .= "From: <no-reply@fit.loc>\r\n";
+
+                    $message = '
+                            <html>
+                            <head>
+                            <title>Подтвердите Email</title>
+                            </head>
+                            <body>
+                            <p>
+                                <a href="http://fit.loc/confirm.php?hash=' . $hash . '">
+                                    Подтвердить Email
+                                </a>
+                            </p>
+                            </body>
+                            </html>
+                            ';
+                    
+                    if (mail($email, "Подтвердите Email на сайте", $message, $headers)) {
+                        echo 'Вам на почту отправлено письмо, пройдите по ссылке в этом письме';
+                    }
+
+                } else {
+                    echo 'Пользователь с таким почтовым ящиком уже существует';
                 }
-
-                $salt = generateSalt();
-
-                $password = md5(md5($password) . $salt);
-
-                $query = $db->query(
-                    "INSERT INTO athletes SET password=?s, name=?s, email=?s, salt=?s",
-                    $password,
-                    $name,
-                    $email,
-                    $salt
-                );
-
-                $query = $db->query("INSERT INTO squad SET email=?s", $email);
-                $query = $db->query("INSERT INTO dead_lift SET email=?s", $email);
-                $query = $db->query("INSERT INTO bench_press SET email=?s", $email);
-                $query = $db->query("INSERT INTO front_squad SET email=?s", $email);
-                $query = $db->query("INSERT INTO jerk SET email=?s", $email);
-                $query = $db->query("INSERT INTO push SET email=?s", $email);
-
-            	header("Location: https://".$_SERVER['HTTP_HOST']."/table.php");
-                session_start();
-                $user = $db->getRow("SELECT * FROM athletes WHERE email = ?s", $_POST['email']);
-                $_SESSION['user'] = $user;
-                $_SESSION['result']['squad'] = $db->getRow("SELECT * FROM squad WHERE email = ?s", $_SESSION['user']['email']);
-                $_SESSION['result']['dead_lift'] = $db->getRow("SELECT * FROM dead_lift WHERE email = ?s", $_SESSION['user']['email']);
-                $_SESSION['result']['bench_press'] = $db->getRow("SELECT * FROM bench_press WHERE email = ?s", $_SESSION['user']['email']);
-                $_SESSION['result']['front_squad'] = $db->getRow("SELECT * FROM front_squad WHERE email = ?s", $_SESSION['user']['email']);
-                $_SESSION['result']['jerk'] = $db->getRow("SELECT * FROM jerk WHERE email = ?s", $_SESSION['user']['email']);
-                $_SESSION['result']['push'] = $db->getRow("SELECT * FROM push WHERE email = ?s", $_SESSION['user']['email']);
-
             } else {
-                echo 'Пользователь с таким почтовым ящиком уже существует';
+                echo 'Слишком длинный запрос';
             }
         } else {
-            echo 'Слишком длинный запрос';
+            echo 'Пароли не совпадают';
         }
     } else {
-        echo 'Все поля обязательны к заполнению';
+        echo 'Не все поля заполнены';
     }
 }
 
@@ -77,17 +98,21 @@ if (isset($_POST['login'])) {
 
             if ($user) {
                 if (md5(md5($_POST['password']) . $user['salt']) === $user['password']) {
-                    header("Location: https://".$_SERVER['HTTP_HOST'] . '/table.php');
-                    session_start();
-                    $_SESSION['user'] = $user;
-                    $_SESSION['result']['squad'] = $db->getRow("SELECT * FROM squad WHERE email = ?s", $_SESSION['user']['email']);
-                    $_SESSION['result']['dead_lift'] = $db->getRow("SELECT * FROM dead_lift WHERE email = ?s", $_SESSION['user']['email']);
-                    $_SESSION['result']['bench_press'] = $db->getRow("SELECT * FROM bench_press WHERE email = ?s", $_SESSION['user']['email']);
-                    $_SESSION['result']['front_squad'] = $db->getRow("SELECT * FROM front_squad WHERE email = ?s", $_SESSION['user']['email']);
-                    $_SESSION['result']['jerk'] = $db->getRow("SELECT * FROM jerk WHERE email = ?s", $_SESSION['user']['email']);
-                    $_SESSION['result']['push'] = $db->getRow("SELECT * FROM push WHERE email = ?s", $_SESSION['user']['email']);
+                    if ($user['confirm']){
+                        header("Location: https://".$_SERVER['HTTP_HOST'] . '/table.php');
+                        session_start();
+                        $_SESSION['user'] = $user;
+                        $_SESSION['result']['squad'] = $db->getRow("SELECT * FROM squad WHERE email = ?s", $_SESSION['user']['email']);
+                        $_SESSION['result']['dead_lift'] = $db->getRow("SELECT * FROM dead_lift WHERE email = ?s", $_SESSION['user']['email']);
+                        $_SESSION['result']['bench_press'] = $db->getRow("SELECT * FROM bench_press WHERE email = ?s", $_SESSION['user']['email']);
+                        $_SESSION['result']['front_squad'] = $db->getRow("SELECT * FROM front_squad WHERE email = ?s", $_SESSION['user']['email']);
+                        $_SESSION['result']['jerk'] = $db->getRow("SELECT * FROM jerk WHERE email = ?s", $_SESSION['user']['email']);
+                        $_SESSION['result']['push'] = $db->getRow("SELECT * FROM push WHERE email = ?s", $_SESSION['user']['email']);
 
-                    $_SESSION['user']['admin'] = $db->getOne("SELECT is_admin FROM athletes WHERE email = ?s", $_POST['email']);
+                        $_SESSION['user']['admin'] = $db->getOne("SELECT is_admin FROM athletes WHERE email = ?s", $_POST['email']);
+                    } else {
+                        echo 'Подтвердите почту';
+                    }
                 } else {
                     echo 'Неправильный Email или пароль';
                 }
