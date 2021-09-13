@@ -27,10 +27,14 @@ formChange.addEventListener('submit', function (e) {
     }).then( 
         answer => {
             formChange.reset();
-            $.fancybox.close();
             current_cell.innerHTML = answer;
+            myModal.close();
         }
     ).catch(
         () => console.log('error')
     );
+});
+
+const myModal = new HystModal({
+    linkAttributeName: "data-hystmodal",
 });

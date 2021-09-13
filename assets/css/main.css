@@ -85,9 +85,6 @@ body {
     flex-direction: column;
     align-items: center;
 }
-.form {
-    max-width: 500px;
-}
 .footer {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -110,4 +107,14 @@ body {
 }
 .str__name {
     line-height: 50px;
+}
+.btn-wrap {
+    display: flex;
+    justify-content: center;
+}
+.input {
+    border: 1px solid #aeaeae;
+}
+.form {
+    padding: 20px;
 }
