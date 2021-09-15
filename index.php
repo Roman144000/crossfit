@@ -16,6 +16,8 @@
             <input class="input" type="password" name="password" placeholder="Пароль">
         </label>
 
+        <span class="forget"><a href="change_pass.php">Забыли пароль?</a></span>
+
         <div class="button-wrap">
             <input type="submit" class="button" value="Жми!">
         </div>

@@ -46,7 +46,7 @@ body {
 }
 .button {
     height: 50px;
-    width: 150px;
+    padding: 0 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -117,4 +117,13 @@ body {
 }
 .form {
     padding: 20px;
+    width: 500px;
+}
+.forget {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 30px;
+}
+.forget a:hover {
+    text-decoration: underline;
 }
