@@ -1,7 +1,8 @@
 <?php
-
+// include database
 include_once('assets/db.php');
 
+// script for confirm email
 if (!empty($_GET['hash'])) {
     $hash = $_GET['hash'];
     $exist_user = $db->getRow("SELECT * FROM athletes_hash WHERE hash = ?s", $hash);

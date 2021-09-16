@@ -1,6 +1,8 @@
 <?
 session_start();
 if (!isset($_SESSION['user'])) die();
+
+// array with title for table
 $array_key  = array(
     'front_squad' => 'Фронтальный присед',
     'dead_lift'   => 'Становая тяга',
@@ -17,8 +19,6 @@ require_once('header.php');
 
     <div class="hello">Привет, <?=$_SESSION['user']['name']?></div>
 
-    <div><?echo $_SESSION['user']['admin'] ? 'У вас есть права администратора' : 'У вас нет прав администратора' ?></div>
-
     <div class="result">
         <div class="result__str">
             <div class="result__str-head"></div>
@@ -27,7 +27,7 @@ require_once('header.php');
             <div class="result__str-head">5 x 15</div>
             <div class="result__str-head">max</div>
         </div>
-        <?
+        <? //table with result
             $result = $_SESSION['result'];
 
             foreach ($result as $key => $item) {?>
@@ -47,7 +47,7 @@ require_once('header.php');
                 
     </div>
 </div>
-
+<!-- modal form for change value in table -->
 <div class="hystmodal" id="change-value" aria-hidden="true">
     <div class="hystmodal__wrap">
         <div class="hystmodal__window" role="dialog" aria-modal="true">

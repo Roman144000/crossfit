@@ -1,5 +1,5 @@
 <? require_once('header.php'); 
-
+// change password
 if (isset($_GET['hash']) && !empty($_GET['hash'])) {?>
 
 <div class="cont form-wrapper">

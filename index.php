@@ -1,5 +1,5 @@
 <? require_once('header.php'); ?>
-
+<!-- login form -->
 <div id="login" class="cont form-wrapper">
 
     <h2>Авторизация</h2>
@@ -24,7 +24,7 @@
     </form>
     
 </div>
-
+<!-- registration form -->
 <div id="registration" class="cont form-wrapper">
 
     <h2>Регистрация</h2>

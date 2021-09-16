@@ -1,11 +1,8 @@
 <?
-
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-
+// include database
 include_once('db.php');
 
+// register script
 if (isset($_POST['register'])) {
 
     if (!empty($_POST['password']) && !empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password2'])) {
@@ -91,6 +88,7 @@ if (isset($_POST['register'])) {
     }
 }
 
+// login script
 if (isset($_POST['login'])) {
     if (!empty($_POST['email']) && !empty($_POST['password'])) {
         if (strlen($_POST['email'])<=30 && strlen($_POST['password'])<=20) {
@@ -127,6 +125,7 @@ if (isset($_POST['login'])) {
     }
 }
 
+// change value in result table
 if (isset($_POST['change'])) {
     if (!empty($_POST['column']) && !empty($_POST['table']) && !empty($_POST['value'])) {
         $value = $_POST['value'];

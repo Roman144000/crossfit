@@ -2,6 +2,7 @@ let current_cell;
 
 let strValue = document.querySelectorAll('.str__value a');
 
+// add event on click value table for change it
 for (let i = 0; i < strValue.length; i++) {
     strValue[i].addEventListener('click', function() {
         current_cell = this;
@@ -12,6 +13,7 @@ for (let i = 0; i < strValue.length; i++) {
     });
 }
 
+// script for send email with ajax
 let formChange = document.querySelector('#change-value form');
 
 formChange.addEventListener('submit', function (e) {
@@ -35,6 +37,7 @@ formChange.addEventListener('submit', function (e) {
     );
 });
 
+// modal window init
 const myModal = new HystModal({
     linkAttributeName: "data-hystmodal",
 });
