@@ -17,35 +17,36 @@ require_once('header.php');
 
 <div class="content cont">
 
-    <div class="hello">Привет, <?=$_SESSION['user']['name']?></div>
+    <div class="hello">Привет, <?= $_SESSION['user']['name'] ?></div>
 
-    <div class="result">
-        <div class="result__str">
-            <div class="result__str-head"></div>
-            <div class="result__str-head">5 x 5</div>
-            <div class="result__str-head">5 x 10</div>
-            <div class="result__str-head">5 x 15</div>
-            <div class="result__str-head">max</div>
-        </div>
+    <table class="result">
+        <tr>
+            <th></th>
+            <th>5 x 5</th>
+            <th>5 x 10</th>
+            <th>5 x 15</th>
+            <th>max</th>
+        </tr>
         <? //table with result
-            $result = $_SESSION['result'];
+        $result = $_SESSION['result'];
 
-            foreach ($result as $key => $item) {?>
-                <div class="result__str">
-                    <div class="str__name"><?=$array_key[$key]?></div>
-                
-            <?
+        foreach ($result as $key => $item) { ?>
+            <tr>
+                <td class="string__title"><?= $array_key[$key] ?></td>
+
+                <?
                 foreach ($item as $k => $i) {
-                    if ($k !== 'email') {?>
-                        <div class="str__value"><a data-hystmodal="#change-value" href="#" data-table="<?=$key?>" data-column="<?=$k?>"><?=($i === null) ? 'Нет данных' : $i?></a></div>
-                    <?
-                    }
-                }
-                echo '</div>';
-            }
-        ?>
-                
-    </div>
+                    if ($k !== 'email') { ?>
+                        <td class="result__value">
+                            <a data-hystmodal="#change-value" href="#" data-table="<?= $key ?>" data-column="<?= $k ?>"><?= ($i === null) ? 'Нет данных' : $i ?>
+                            </a>
+                        </td>
+                <? }
+                } ?>
+            </tr>
+        <? } ?>
+
+    </table>
 </div>
 <!-- modal form for change value in table -->
 <div class="hystmodal" id="change-value" aria-hidden="true">
@@ -56,7 +57,7 @@ require_once('header.php');
                 <input type="hidden" name="change">
                 <input type="hidden" name="table">
                 <input type="hidden" name="column">
-                <input type="hidden" name="user" value="<?=$_SESSION['user']['email']?>">
+                <input type="hidden" name="user" value="<?= $_SESSION['user']['email'] ?>">
 
                 <label>
                     <input class="input" type="text" name="value" placeholder="Новое значение">
